@@ -1,1 +1,2 @@
 *** TypeScript Notes ***
+* SECTION 1 : Introduction *
