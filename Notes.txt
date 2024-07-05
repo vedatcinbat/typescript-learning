@@ -84,27 +84,4 @@ AKA types
 > tsc <filename>.tsc
 -> Then run that .js file with node command
 > node <filename>.js
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ########################################################################################################
