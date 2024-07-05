@@ -1,2 +1,60 @@
 *** TypeScript Notes ***
+
+########################################################################################################
 * SECTION 1 : Introduction *
+---------------------------------------
+* Topics
+---------------------------------------
+-> Installation
+-> Type Basics
+-> Functions
+-> Object Types
+-> Array Types 
+-> Union Types 
+-> Tuples/Enums
+-> Interfaces
+-> TS Compiler
+-> DOM Mini Project
+-> JS Classes
+-> TS Classes 
+-> Generics
+-> Narrowing
+-> Declarations
+-> Modules
+-> Webpack + TS
+-> React + TS
+
+---------------------------------------
+* What is TypeScript ?
+---------------------------------------
+-> Typescript is a programming language developed by Microsoft that extends JavaScript by adding
+static types
+-> It is designed for large-scale Javascript application development, offering benefits such as improved
+maintainability, easier refactoring, and better tooling support through type-checking
+-> Key Features: Static Typing | ES6+ Features | Type Inference | Interface and Type Declarations 
+-> Advantages of TypeScript : 
+--> Type Safety
+--> Improved Code Quality
+--> Better Tooling
+--> Ecosystem Compatibility
+--> Scalability
+-> Overall, Typescript aims to make JavaScript development more robust and scalable by introducing static typing
+and other features without sacrificing compatibility with JS's ecosystem
+
+-> JavaScript is quirky...
+-> Typescript is Javascript with types
+
+---------------------------------------
+* TypeScript Overview
+---------------------------------------
+-> Static Checking : Typescript detects erros in our code "without running it"
+-> This is called static checking
+-> TypeScript does this error checknig on the basis of "kinds of data" in our program
+AKA types
+-> TypeScript's Type System
+--> Helpos us find erros
+--> Analyzes our code as we type
+--> Only exists in development
+-> First use ts then compile js
+-> Typescript gives the errors before "runtime"
+########################################################################################################
