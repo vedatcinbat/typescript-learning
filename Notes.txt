@@ -58,3 +58,53 @@ AKA types
 -> First use ts then compile js
 -> Typescript gives the errors before "runtime"
 ########################################################################################################
+
+
+
+
+########################################################################################################
+* SECTION 2 : Installation & Setup *
+---------------------------------------
+* Installing Typescript
+---------------------------------------
+-> First install node
+-> Then run "npm install -g typescript" for installing typescript globally
+
+---------------------------------------
+* The TypeScript Playground
+---------------------------------------
+-> You can use for trying codes online : https://www.typescriptlang.org/play/
+
+---------------------------------------
+* How We Use Typescript
+---------------------------------------
+-> Create ".ts" file
+-> Make some work
+-> Compile that ts code into js with "tsc" command
+> tsc <filename>.tsc
+-> Then run that .js file with node command
+> node <filename>.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################################################
