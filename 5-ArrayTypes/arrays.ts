@@ -1,4 +1,4 @@
-const activeUsers: string[] = ['John', 'Doe', 'Jane'];
+/* const activeUsers: string[] = ['John', 'Doe', 'Jane'];
 const activeNumbers: number[] = [1, 2, 3];
 // const aciteveUserse: string[] = ['John', 'Doe', 'Jane', 2]; 
 // Error: Type 'number' is not assignable to type 'string'. 
@@ -42,4 +42,4 @@ const board: string[][] = [
     ["X", "O", "X"], 
     ["O", "X", "O"], 
     ["X", "O", "X"]
-]
+] */
