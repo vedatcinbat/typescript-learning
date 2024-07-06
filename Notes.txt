@@ -545,3 +545,127 @@ const board: string[][] = [
     ["X", "O", "X"]
 ]
 ########################################################################################################
+
+########################################################################################################
+* SECTION 7 : Union Types *
+---------------------------------------
+* Union Types
+---------------------------------------
+-> Union types allow us to give a value a few different possible types
+-> If the eventual value's type is included, TS will be happy
+-> We can create a union type by using the single "|" to separate the types we want to include
+-> It's like saying, "This thing is allowed to be this, this, or this"
+-> TypeScript will enforce it from there 
+
+> const guessAge = (age: number | string) => {
+    return "Your age is : " + age;
+}
+
+// CAN pass a number or a string
+guessAge(30); (ok)
+guessAge("28"); (ok)
+
+// CANT pass something else
+guessAge({age: 32})
+
+
+type Point = {
+    x: number;
+    y: number;
+}
+
+type Loc = {
+    lat: number;
+    long: number;
+}
+
+let coordinates: Point | Loc = {x: 1 , y: 34};
+
+coordinates = {lat: 34, long: 56}; // Its valid because coordinates is a union type of Point and Loc
+
+
+---------------------------------------
+* Type Narrowing w/ Union Types
+---------------------------------------
+-> Narrowing the Type is simply doing a type check before working with a value
+-> If you value is a string you may want to use it differently than if you got a number
+-> Since unions allow multiple types for a value, it's good to check what cam through before 
+working with it
+
+const isTeenager = (age: number | string) => {
+    if(typeof age === 'string') {
+        console.log(age.charAt(0) === 1);
+    }
+
+    if(typeof age === 'number') {
+        console.log(age > 12 && age < 20);
+    }
+}
+
+isTeenager('20'); // false
+isTeenager(13); // true
+
+function calculateTax(price: number | string, tax: number) {
+    //return price * tax; // Error: Operator '*' cannot be applied to types 'string | number' and 'number'.
+    //price.replace("$", ""); // Error: Property 'replace' does not exist on type 'string | number'.
+
+    if(typeof price === 'string') {
+        price = parseFloat(price.replace("$", ""));
+        // price = .... // Now price is a number
+    }
+
+    return price * tax;
+}
+
+
+---------------------------------------
+* Union Types and Arrays
+---------------------------------------
+const stuff: (number | string)[] = [1,2,3,4, "hello", "world"];
+const coords: (Point | Loc)[] = [{x: 1, y: 2}, {lat: 34, long: 56}];
+
+const nums: number[] = [1,2,3,4];
+// const stuff: any[] = [1,2,3,4, "hello", true, [1,2,3,4], {name: "John"}];
+// const stuff: number[] | string[] = [1,2,3] or ["hello", "world"];
+// number[] | string[] means that stuff can be either an array of numbers or an array of strings
+
+
+---------------------------------------
+* Literal Types
+---------------------------------------
+-> Literal types are not just types - but the values themselves too!
+-> On it's own, that's not super helpful
+-> But combine it with something like unions and you can have very fine-tuned type options
+for TypeScript to enforce
+
+> const giveAnswer = (answer: "yes" | "no" | "maybe") => {
+    return `The answer is ${answer}.`;
+}
+
+giveAnswer("no") // The answer is "no" (ok)
+giveAnswer("oh bot I'm not sure"); // CANT PROVIDE ANYTHING ELSE
+
+let zero: 0 = 0
+//zero = 2; // Error: Type '2' is not assignable to type '0'
+
+let hi: "hi" = "hi";
+//hi = "hello"; // Error: Type '"hello"' is not assignable to type '"hi"'
+
+let answer: "yes" | "no" | "maybe" = "yes";
+answer = "no";
+answer = "maybe";
+//answer = "ok"; // Error: Type '"ok"' is not assignable to type '"yes" | "no" | "maybe"'
+
+let mood: "happy" | "sad" | "angry" | "meh" = "happy";
+mood = "sad";
+mood = "angry";
+mood = "meh";
+//mood = "ok"; // Error: Type '"ok"' is not assignable to type '"happy" | "sad" | "angry" | "meh"'
+
+type DayOfWeek = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+
+let today: DayOfWeek = "Monday";
+// today = "Holiday"; // Error: Type '"Holiday"' is not assignable to type 'DayOfWeek'
+// Because "Holiday" is not a valid value for DayOfWeek (Monday-Tuesday-Wednesday-Thursday-Friday-Saturday-Sunday)
+
+########################################################################################################
