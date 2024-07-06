@@ -486,3 +486,70 @@ const sadFace: ColorfulCircle = {
     color: "blue"
 }
 ########################################################################################################
+
+########################################################################################################
+* SECTION 6 : Array Types *
+---------------------------------------
+* Array Types
+---------------------------------------
+-> Arrays can be typed using a type annotation followed by empty array brackets, like
+number[] for an array of numbers
+-> Note: These arrays only allow daya fo that one type inside them.
+
+-> Using brackets
+> let names: string[] = ["hello", "world"];
+> let ages: number[] = [13, 31, 42, 56];
+
+-> Alternate syntax
+> let names: Array<string> = ["hello", "world"];
+> let ages: Array<number> = [13, 31, 42, 56];
+
+
+const activeUsers: string[] = ['John', 'Doe', 'Jane'];
+const activeNumbers: number[] = [1, 2, 3];
+
+
+activeUsers.push('Smith');
+//activeUsers.push(4); // Error: Argument of type '4' is not assignable to parameter of type 'string'. 
+
+
+const ageList: number[] = [25, 30, 35, 40];
+
+ageList[0] = 99;
+// ageList[0] = "99"; // Error: Type 'string' is not assignable to type 'number'.
+
+
+---------------------------------------
+* More Array Syntax
+---------------------------------------
+-> We can create our custom type and we can use that custom type for declaring variable 
+that array of that custom type :
+
+type Point = {
+    x: number;
+    y: number;
+}
+
+const coords: Point[] = []
+coords.push({ x: 10, y: 20 });
+//coords.push({x: 8}) // Error: Property 'y' is missing in type '{ x: number; }' but required in type 'Point'.
+
+
+---------------------------------------
+* Multidimensional Arrays
+---------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################################################
