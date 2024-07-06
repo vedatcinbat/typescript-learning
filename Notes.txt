@@ -60,8 +60,6 @@ AKA types
 ########################################################################################################
 
 
-
-
 ########################################################################################################
 * SECTION 2 : Installation & Setup *
 ---------------------------------------
@@ -178,4 +176,129 @@ it will enforce that type moving forword
 > myComplicatedData = 87; // OK
 > myComplicatedData = "abc..."; // OK
 > myComplicatedData = true; // OK
+########################################################################################################
+
+
+########################################################################################################
+* SECTION 4 : Functions *
+---------------------------------------
+* Function Parameter Types
+---------------------------------------
+-> In TypeScript, we can specify the type fo function parameters in a function definition
+-> This allows Typescript to enforce the types for the values being passed into your Function
+-> Typing parameters is just like typing variables
+
+> const encourageStudent = (name: string) => {
+    return `Hey, ${name}, you're doing GREAT!`;
+}
+
+encourageStudent('you'); (ok)
+
+encourageStudent(85); (x) 
+
+> const doSomething = (person: string, age: number, isFunny: boolean) => {
+    return `Hi there, ${person}! You are ${age} years old. Are you funny? ${isFunny}`;
+}
+
+//console.log(doSomething("VedatCinbat")) // Error: Expected 3 arguments, but got 1.
+//console.log(doSomething("VedatCinbat", 24)); // Error: Expected 3 arguments, but got 2.
+//console.log(doSomething("VedatCinbat", 24, true)); // Hi there, VedatCinbat! You are 24 years old. Are you funny? true
+
+
+---------------------------------------
+* Working With Default Parameters
+---------------------------------------
+-> Add "default value" after type annotations
+
+> function greet(person: string = "stranger") {
+    return `Hi there, ${person}!`;
+}
+
+---------------------------------------
+* Return Type Annotation
+---------------------------------------
+-> We can specify the type returned by a function
+-> Even through TypeScript can often infer this, I prefer the explicit annotations
+-> Add the type annotation after the functions parameter list
+
+> const addNums = (x: number, y:number): number => {
+    return x + y;
+}
+
+addNums(5,5);
+// --> 10
+
+function rando(num: number): number | string {
+    if(Math.random() < 0.5) {
+        return num.toString();
+    }
+
+    return num;
+}
+
+
+---------------------------------------
+* Anonymous Function Contextual Typing
+---------------------------------------
+-> Anonymous Function: When TypeScript can infer how an unnamed function is going to be called,
+it can automatically infer its parameter's types
+
+> const numbers = [1, 2, 3];
+
+> numbers.forEach(num => {
+    return num.toUpperCase(); // Error
+    // .toUpperCase() doesn't work for nums!
+})
+
+> const colors = ['red', 'green', 'blue'];
+
+// TS can automatically infer the type of the return value from
+> colors.map(color => {
+    return color.toUpperCase()
+})
+
+
+---------------------------------------
+* The Void Type
+---------------------------------------
+-> Void is a return type for functions that don't return anything
+-> It means just that - this function is void of any data
+-> Typescript can infer this type fairly well, but sometimes it may want you to 
+annotate a function with a void return explicity
+
+> const annoyUser = (num: number): void => {
+    for(let i = 0; i < num; i++) {
+        alert("HIIIII!!");
+    }
+}
+
+> function printTwice(msg: string): void {
+    console.log(msg);
+    console.log(msg);
+
+    // return ""; // Error: Type '""' is not assignable to type 'void'.
+}
+
+> printTwice("Hello, World!");
+
+
+---------------------------------------
+* Never Type
+---------------------------------------
+-> The never type represents values that NEVER occur
+-> We might use it to annotate a function that always throws an exception, or a function
+that never finishes executing
+-> Don't confuse with void - void returns undefined or null, which is technically still a 
+type of value
+-> With "never", a function doesn't even finish executing 
+
+> const neverStop = (): never => {
+    while(true) {
+        console.log("I'm still going!!!")
+    }
+}
+
+> const giveError = (msg: string) => {
+    throw new Error(msg)
+}
 ########################################################################################################
