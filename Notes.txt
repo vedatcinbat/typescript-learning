@@ -669,3 +669,135 @@ let today: DayOfWeek = "Monday";
 // Because "Holiday" is not a valid value for DayOfWeek (Monday-Tuesday-Wednesday-Thursday-Friday-Saturday-Sunday)
 
 ########################################################################################################
+
+
+########################################################################################################
+* SECTION 8 : Tuples And Enums *
+---------------------------------------
+* Tuples
+---------------------------------------
+-> Tuples are a special type exclusive to TypeScript 
+-> Tuples are arrays of fixed lengths and ordered with specific types like super rigid arrays
+
+> let myTuple: [number, string];
+
+myTuple = [10, "Typescript is fun"]; (ok)
+myTuple = ["Typescript is fun", 10]; (not ok)
+
+//const color: number[] = [255, 0, 0];
+//const color: [number, number, number] = [255, 0]; // Error: Type 'string' is not assignable to type 'number'.
+//const color: [number, number, number] = [255, 0, 0, 0, 2]; // Error: Type 'number' is not assignable to type 'undefined'. 
+//const color: [number, number, number] = [255, 0, 0, 2]; // Source has 4 elements, target expects 3.
+
+const color: [number, number, number] = [255, 0, 0];
+
+type HTTPResponse = [number, string];
+
+const goodRes: HTTPResponse = [200, 'OK'];
+//goodRes[0] = "200"; // Error: Type 'string' is not assignable to type 'number'.
+
+/* goodRes.push(123); // No error
+goodRes.pop(); // No error
+goodRes.pop();   
+goodRes.pop();
+*/ 
+console.log(goodRes);
+
+// Why not to use objects for tuples
+
+type HTTPResponseType = {
+    code: number,
+    message: string
+}
+
+const goodResObj: HTTPResponseType = { code: 200, message: 'OK' };
+
+
+---------------------------------------
+* Enums
+---------------------------------------
+-> Enums allow us to define a "set of named constants"
+-> We can give these constants numeric or string values
+-> There's quite a few options when it comes to enums
+
+> enum Responses {
+    no, // 0
+    yes, // 1
+    maybe // 2
+}
+
+> enum Responses {
+    no = 2, // 2
+    yes, // 3
+    maybe // 4
+}
+
+> enum Responses {
+    no = 2, // 2
+    yes = 10, // 10
+    maybe = 24 // 24
+}
+
+> enum Responses {
+    no = 'No',
+    yes = 'Yes',
+    maybe = 'Maybe'
+}
+
+> enum Responses {
+    no = 0,
+    yes = 1,
+    maybe = 'Maybe'
+}
+
+
+enum OrderStatus {
+    PENDING,
+    SHIPPED,
+    DELIVERED,
+    RETURNED
+}
+
+
+const myStatus = OrderStatus.DELIVERED;
+
+
+function isDelivered(status: OrderStatus): boolean {
+    return status === OrderStatus.DELIVERED
+}
+
+isDelivered(myStatus); // true
+
+enum ArrowKeys {
+    UP = "up",
+    DOWN = "down",
+    LEFT = "left",
+    RIGHT = "right",
+    ERROR = 235
+}
+
+ArrowKeys.LEFT; // "left"
+ArrowKeys.RIGHT; // "right"
+ArrowKeys.ERROR; // 235
+
+
+---------------------------------------
+* Enums Behing The Scenes
+---------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################################################
