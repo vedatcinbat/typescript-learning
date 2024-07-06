@@ -85,3 +85,97 @@ AKA types
 -> Then run that .js file with node command
 > node <filename>.js
 ########################################################################################################
+
+
+########################################################################################################
+* SECTION 3 : Type Annotation Basics *
+---------------------------------------
+* Our First Type Annotation
+---------------------------------------
+-> Primitive Types 
+--> Number | String | Booelan | Null | Undefined | Void | Any | Never | Unknown
+-> Object Types
+--> Object | Array | Function | Tuple | Enum | Others
+
+-> Where we use that types in our projects
+--> "This variable is a string"
+--> "This function returns a boolean"
+--> "This function accepts two numbers and returns a number"
+--> "This object must have a property called "colors", set to an array of strings"
+
+-> Variable Types: Assigning a basic type to a variable is easy - just add ":Type" after
+the variable name! (Also called 'Type Annotation')
+
+// Declaring a variable in JS
+> const myAwesomeVariable = 'So Awesome!';
+// Declaring a variable in TS
+> const myAwesomeVariable: string = 'So Awesome!';
+
+-> let myVar: type = value
+
+
+-> Strings: Strings represent character values like "I love Typescript"
+-> We can tell TypeScript that something is a string using the type annotation fo "string" (all lowercase)
+
+> let myString: string = "Words!!!";
+
+(x) myString = 100; // CAN'T reassign to a different type
+
+(ok) myString = "New Words!!!!";
+
+
+---------------------------------------
+* Working With Numbers & Booleans
+---------------------------------------
+-> Some programming langauges have many number types  - float, int etc.
+-> In TypeScript numbers are just numbers
+-> Numbers can be typed with a simple Type Annotation of "number" (all lowercase)
+
+> let myNumber: number = 42;
+> myNumber = "I'm a string!"; (x)
+> myNumber = 60; // CAN reassign to a value of same type
+
+-> Boolean variables represent simple "true" or "false" values
+-> Booleans can be typed with a simple type annotation of "boolean"
+
+> const myBoolean: boolean = true;
+> myBoolean = 87; (x)
+> myBoolean = false; (ok)
+
+
+---------------------------------------
+* Compiling TypeScript
+---------------------------------------
+-> Go the folder that you want to run "tsc" command in it
+-> Then run "tsc <filename>.tsc"
+-> Then run "node <filename>.js"
+
+-> At the end of day, we are getting plain js file because browser can only understand plain 
+javascript code
+
+
+---------------------------------------
+* Type Inference
+---------------------------------------
+-> Type Inference refers to the Typescript compiler's ability to infer types from certain
+values in your code
+-> Typescript can remember a value's type even if you didn't provide a type annotation, and
+it will enforce that type moving forword
+
+> let x = 27;
+> x = 'twenty-seven';
+// ERROR - Type 'string' is not assignable to type 'number'
+
+---------------------------------------
+* Any Type
+---------------------------------------
+-> 'any' is an escape hatch!
+-> It turns off type checking for this variable so you can do your thing
+-> NOTE: it sort of defats the purpose of TS and types, so use it sparingly!
+
+> const myComplicatedData: any = "I'm going to be complicated!";
+
+> myComplicatedData = 87; // OK
+> myComplicatedData = "abc..."; // OK
+> myComplicatedData = true; // OK
+########################################################################################################
