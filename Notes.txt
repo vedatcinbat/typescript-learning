@@ -302,3 +302,197 @@ type of value
     throw new Error(msg)
 }
 ########################################################################################################
+
+########################################################################################################
+* SECTION 5 : Object Types *
+---------------------------------------
+* Objects
+---------------------------------------
+-> Objects can be typed bu declaring what the object should look like in the annotation
+-> Accessing a property that isn't defined or performing operations without keeping types in mid
+will throw errors!
+
+> const printName = (name: {first: string, last: string}) => {
+    return `Name: ${first} ${last}`;
+}
+
+printName({first: 'Vedat', last: 'Cinbat'});
+
+function printName(person: {first: string, last: string}) {
+    console.log(`${person.first} ${person.last}`)
+}
+
+//printName({first: "John"}); // Error: Argument of type '{ first: string; }' is not assignable to parameter of type '{ first: string; last: string; }'.
+printName({first: "John", last: "Doe"});
+
+
+//let coordinate: {x: number, y: number} = {x: 10, y: 20, z: 30}; // Error: Object literal may only specify known properties, and 'z' does not exist in type '{ x: number; y: number; }'.
+let coordinate: {x: number, y: number} = {x: 10, y: 20}; // OK
+
+// {x: number, y: number} is a return type
+function randomCoordinate(): {x: number, y: number} {
+    return {x: Math.random(), y: Math.random()};
+}
+
+---------------------------------------
+* Excess Properties
+---------------------------------------
+//printName({first: "Mick", last: "Jagger", age: 47}) // Error: Object literal may only specify known properties, and 'age' does not exist in type '{ first: string; last: string; }'.
+
+const singer = {first: "Mick", last: "Jagger", age: 47, isAlive: true}
+
+printName(singer) // OK
+
+
+---------------------------------------
+* Type Alias
+---------------------------------------
+-> Instead of writing out object types in an annotation, we can declare them separaretly in a "type alias",
+which is simply the desired shape of the object
+-> This allows us to make our code more readable and even reuse the types elsewhere in our code 
+
+type Person = {
+    name: string;
+    age: number;
+}
+
+const sayHappyBirthday = (person: Person) => {
+    return `Hey ${person.name}, congrats on turning ${person.age}`;
+}
+
+sayHappyBirthday({name: "Jerry", age: 42});
+--------------------------------------------------------------------------------
+type Point = {
+    x: number;
+    y: number;
+}
+
+let coordinate: Point = { x: 10, y: 20 };
+
+function randomCoordinate() {
+    return { x: Math.random(), y: Math.random() };
+}
+
+function doublePoint(point: Point): Point {
+    return {x: point.x * 2, y: point.y * 2};
+}
+
+randomCoordinate();
+doublePoint(coordinate); // OK
+
+
+---------------------------------------
+* Nested Objects
+---------------------------------------
+> const describePerson = (person: {
+    name: string;
+    age: number;
+    parentNames: {
+        mom: string;
+        dad: string;
+    }
+}) => {
+    return `Person: ${name},
+    Age: ${age},
+    parents: ${parentNames.mom} ${parentNames.dad}`;
+}
+
+describePerson({name: 'Jimmy', age: 10, parents: {mom: 'Kim', dad: 'Steve'}})
+
+type Song = { 
+    title: string, 
+    artist: string, 
+    numStreams: number, 
+    credits: { 
+        producer: string, 
+        writer: string 
+    } 
+}
+
+function calculatePayout(song: Song): number {
+    return song.numStreams * 0.0033;
+}
+
+function printSong(song: Song): void {
+    console.log(`Title: ${song.title} - Artist: ${song.artist}`);
+}
+
+const mySong: Song = {
+    title: "Unchained Melody",
+    artist: "The Righteous Brothers",
+    numStreams: 1236573,
+    credits: {
+        producer: "Phil Spector",
+        writer: "Alex North"
+    }
+}
+
+const earnings = calculatePayout(mySong); // OK
+console.log(earnings);
+printSong(mySong); // OK
+
+---------------------------------------
+* Optional Properties
+---------------------------------------
+type Point = {
+    x: number,
+    y: number,
+    z?: number // Optional property
+}
+
+const point1: Point = { x: 1, y: 2 }; // OK
+const point2: Point = { x: 1, y: 2, z: 3 }; // OK
+const point3: Point = { x: 1 }; // Error: Property 'y' is missing
+
+---------------------------------------
+* The Readonly Modifier
+---------------------------------------
+type User = {
+    readonly id: number,
+    username: string,
+    readonly hobbies: string[]
+}
+
+const user: User = {
+    id: 1,
+    username: "johndoe",
+    hobbies: ["reading", "swimming"]
+}
+
+//user.id = 2; // Error: Cannot assign to 'id' because it is a read-only property
+user.username = "janedoe"; // OK
+user.hobbies.push("running"); // OK
+
+---------------------------------------
+* Intersection Types
+---------------------------------------
+type Circle = {
+    radius: number;
+}
+
+type Colorful = {
+    color: string;
+}
+
+type ColorfulCircle = Circle & Colorful;    
+
+const happyFace: ColorfulCircle = {
+    radius: 42,
+    color: "yellow"
+}
+
+const sadFace: ColorfulCircle = {
+    radius: 50,
+    color: "blue"
+}
+
+
+
+
+
+
+
+
+
+
+########################################################################################################
