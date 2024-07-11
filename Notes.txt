@@ -60,8 +60,6 @@ AKA types
 ########################################################################################################
 
 
-
-
 ########################################################################################################
 * SECTION 2 : Installation & Setup *
 ---------------------------------------
@@ -178,4 +176,1276 @@ it will enforce that type moving forword
 > myComplicatedData = 87; // OK
 > myComplicatedData = "abc..."; // OK
 > myComplicatedData = true; // OK
+########################################################################################################
+
+
+########################################################################################################
+* SECTION 4 : Functions *
+---------------------------------------
+* Function Parameter Types
+---------------------------------------
+-> In TypeScript, we can specify the type fo function parameters in a function definition
+-> This allows Typescript to enforce the types for the values being passed into your Function
+-> Typing parameters is just like typing variables
+
+> const encourageStudent = (name: string) => {
+    return `Hey, ${name}, you're doing GREAT!`;
+}
+
+encourageStudent('you'); (ok)
+
+encourageStudent(85); (x) 
+
+> const doSomething = (person: string, age: number, isFunny: boolean) => {
+    return `Hi there, ${person}! You are ${age} years old. Are you funny? ${isFunny}`;
+}
+
+//console.log(doSomething("VedatCinbat")) // Error: Expected 3 arguments, but got 1.
+//console.log(doSomething("VedatCinbat", 24)); // Error: Expected 3 arguments, but got 2.
+//console.log(doSomething("VedatCinbat", 24, true)); // Hi there, VedatCinbat! You are 24 years old. Are you funny? true
+
+
+---------------------------------------
+* Working With Default Parameters
+---------------------------------------
+-> Add "default value" after type annotations
+
+> function greet(person: string = "stranger") {
+    return `Hi there, ${person}!`;
+}
+
+---------------------------------------
+* Return Type Annotation
+---------------------------------------
+-> We can specify the type returned by a function
+-> Even through TypeScript can often infer this, I prefer the explicit annotations
+-> Add the type annotation after the functions parameter list
+
+> const addNums = (x: number, y:number): number => {
+    return x + y;
+}
+
+addNums(5,5);
+// --> 10
+
+function rando(num: number): number | string {
+    if(Math.random() < 0.5) {
+        return num.toString();
+    }
+
+    return num;
+}
+
+
+---------------------------------------
+* Anonymous Function Contextual Typing
+---------------------------------------
+-> Anonymous Function: When TypeScript can infer how an unnamed function is going to be called,
+it can automatically infer its parameter's types
+
+> const numbers = [1, 2, 3];
+
+> numbers.forEach(num => {
+    return num.toUpperCase(); // Error
+    // .toUpperCase() doesn't work for nums!
+})
+
+> const colors = ['red', 'green', 'blue'];
+
+// TS can automatically infer the type of the return value from
+> colors.map(color => {
+    return color.toUpperCase()
+})
+
+
+---------------------------------------
+* The Void Type
+---------------------------------------
+-> Void is a return type for functions that don't return anything
+-> It means just that - this function is void of any data
+-> Typescript can infer this type fairly well, but sometimes it may want you to 
+annotate a function with a void return explicity
+
+> const annoyUser = (num: number): void => {
+    for(let i = 0; i < num; i++) {
+        alert("HIIIII!!");
+    }
+}
+
+> function printTwice(msg: string): void {
+    console.log(msg);
+    console.log(msg);
+
+    // return ""; // Error: Type '""' is not assignable to type 'void'.
+}
+
+> printTwice("Hello, World!");
+
+
+---------------------------------------
+* Never Type
+---------------------------------------
+-> The never type represents values that NEVER occur
+-> We might use it to annotate a function that always throws an exception, or a function
+that never finishes executing
+-> Don't confuse with void - void returns undefined or null, which is technically still a 
+type of value
+-> With "never", a function doesn't even finish executing 
+
+> const neverStop = (): never => {
+    while(true) {
+        console.log("I'm still going!!!")
+    }
+}
+
+> const giveError = (msg: string) => {
+    throw new Error(msg)
+}
+########################################################################################################
+
+########################################################################################################
+* SECTION 5 : Object Types *
+---------------------------------------
+* Objects
+---------------------------------------
+-> Objects can be typed bu declaring what the object should look like in the annotation
+-> Accessing a property that isn't defined or performing operations without keeping types in mid
+will throw errors!
+
+> const printName = (name: {first: string, last: string}) => {
+    return `Name: ${first} ${last}`;
+}
+
+printName({first: 'Vedat', last: 'Cinbat'});
+
+function printName(person: {first: string, last: string}) {
+    console.log(`${person.first} ${person.last}`)
+}
+
+//printName({first: "John"}); // Error: Argument of type '{ first: string; }' is not assignable to parameter of type '{ first: string; last: string; }'.
+printName({first: "John", last: "Doe"});
+
+
+//let coordinate: {x: number, y: number} = {x: 10, y: 20, z: 30}; // Error: Object literal may only specify known properties, and 'z' does not exist in type '{ x: number; y: number; }'.
+let coordinate: {x: number, y: number} = {x: 10, y: 20}; // OK
+
+// {x: number, y: number} is a return type
+function randomCoordinate(): {x: number, y: number} {
+    return {x: Math.random(), y: Math.random()};
+}
+
+---------------------------------------
+* Excess Properties
+---------------------------------------
+//printName({first: "Mick", last: "Jagger", age: 47}) // Error: Object literal may only specify known properties, and 'age' does not exist in type '{ first: string; last: string; }'.
+
+const singer = {first: "Mick", last: "Jagger", age: 47, isAlive: true}
+
+printName(singer) // OK
+
+
+---------------------------------------
+* Type Alias
+---------------------------------------
+-> Instead of writing out object types in an annotation, we can declare them separaretly in a "type alias",
+which is simply the desired shape of the object
+-> This allows us to make our code more readable and even reuse the types elsewhere in our code 
+
+type Person = {
+    name: string;
+    age: number;
+}
+
+const sayHappyBirthday = (person: Person) => {
+    return `Hey ${person.name}, congrats on turning ${person.age}`;
+}
+
+sayHappyBirthday({name: "Jerry", age: 42});
+--------------------------------------------------------------------------------
+type Point = {
+    x: number;
+    y: number;
+}
+
+let coordinate: Point = { x: 10, y: 20 };
+
+function randomCoordinate() {
+    return { x: Math.random(), y: Math.random() };
+}
+
+function doublePoint(point: Point): Point {
+    return {x: point.x * 2, y: point.y * 2};
+}
+
+randomCoordinate();
+doublePoint(coordinate); // OK
+
+
+---------------------------------------
+* Nested Objects
+---------------------------------------
+> const describePerson = (person: {
+    name: string;
+    age: number;
+    parentNames: {
+        mom: string;
+        dad: string;
+    }
+}) => {
+    return `Person: ${name},
+    Age: ${age},
+    parents: ${parentNames.mom} ${parentNames.dad}`;
+}
+
+describePerson({name: 'Jimmy', age: 10, parents: {mom: 'Kim', dad: 'Steve'}})
+
+type Song = { 
+    title: string, 
+    artist: string, 
+    numStreams: number, 
+    credits: { 
+        producer: string, 
+        writer: string 
+    } 
+}
+
+function calculatePayout(song: Song): number {
+    return song.numStreams * 0.0033;
+}
+
+function printSong(song: Song): void {
+    console.log(`Title: ${song.title} - Artist: ${song.artist}`);
+}
+
+const mySong: Song = {
+    title: "Unchained Melody",
+    artist: "The Righteous Brothers",
+    numStreams: 1236573,
+    credits: {
+        producer: "Phil Spector",
+        writer: "Alex North"
+    }
+}
+
+const earnings = calculatePayout(mySong); // OK
+console.log(earnings);
+printSong(mySong); // OK
+
+---------------------------------------
+* Optional Properties
+---------------------------------------
+type Point = {
+    x: number,
+    y: number,
+    z?: number // Optional property
+}
+
+const point1: Point = { x: 1, y: 2 }; // OK
+const point2: Point = { x: 1, y: 2, z: 3 }; // OK
+const point3: Point = { x: 1 }; // Error: Property 'y' is missing
+
+---------------------------------------
+* The Readonly Modifier
+---------------------------------------
+type User = {
+    readonly id: number,
+    username: string,
+    readonly hobbies: string[]
+}
+
+const user: User = {
+    id: 1,
+    username: "johndoe",
+    hobbies: ["reading", "swimming"]
+}
+
+//user.id = 2; // Error: Cannot assign to 'id' because it is a read-only property
+user.username = "janedoe"; // OK
+user.hobbies.push("running"); // OK
+
+---------------------------------------
+* Intersection Types
+---------------------------------------
+type Circle = {
+    radius: number;
+}
+
+type Colorful = {
+    color: string;
+}
+
+type ColorfulCircle = Circle & Colorful;    
+
+const happyFace: ColorfulCircle = {
+    radius: 42,
+    color: "yellow"
+}
+
+const sadFace: ColorfulCircle = {
+    radius: 50,
+    color: "blue"
+}
+########################################################################################################
+
+########################################################################################################
+* SECTION 6 : Array Types *
+---------------------------------------
+* Array Types
+---------------------------------------
+-> Arrays can be typed using a type annotation followed by empty array brackets, like
+number[] for an array of numbers
+-> Note: These arrays only allow daya fo that one type inside them.
+
+-> Using brackets
+> let names: string[] = ["hello", "world"];
+> let ages: number[] = [13, 31, 42, 56];
+
+-> Alternate syntax
+> let names: Array<string> = ["hello", "world"];
+> let ages: Array<number> = [13, 31, 42, 56];
+
+
+const activeUsers: string[] = ['John', 'Doe', 'Jane'];
+const activeNumbers: number[] = [1, 2, 3];
+
+
+activeUsers.push('Smith');
+//activeUsers.push(4); // Error: Argument of type '4' is not assignable to parameter of type 'string'. 
+
+
+const ageList: number[] = [25, 30, 35, 40];
+
+ageList[0] = 99;
+// ageList[0] = "99"; // Error: Type 'string' is not assignable to type 'number'.
+
+
+---------------------------------------
+* More Array Syntax
+---------------------------------------
+-> We can create our custom type and we can use that custom type for declaring variable 
+that array of that custom type :
+
+type Point = {
+    x: number;
+    y: number;
+}
+
+const coords: Point[] = []
+coords.push({ x: 10, y: 20 });
+//coords.push({x: 8}) // Error: Property 'y' is missing in type '{ x: number; }' but required in type 'Point'.
+
+
+---------------------------------------
+* Multidimensional Arrays
+---------------------------------------
+// 3x3 board 
+const board: string[][] = [
+    ["X", "O", "X"], 
+    ["O", "X", "O"], 
+    ["X", "O", "X"]
+]
+########################################################################################################
+
+########################################################################################################
+* SECTION 7 : Union Types *
+---------------------------------------
+* Union Types
+---------------------------------------
+-> Union types allow us to give a value a few different possible types
+-> If the eventual value's type is included, TS will be happy
+-> We can create a union type by using the single "|" to separate the types we want to include
+-> It's like saying, "This thing is allowed to be this, this, or this"
+-> TypeScript will enforce it from there 
+
+> const guessAge = (age: number | string) => {
+    return "Your age is : " + age;
+}
+
+// CAN pass a number or a string
+guessAge(30); (ok)
+guessAge("28"); (ok)
+
+// CANT pass something else
+guessAge({age: 32})
+
+
+type Point = {
+    x: number;
+    y: number;
+}
+
+type Loc = {
+    lat: number;
+    long: number;
+}
+
+let coordinates: Point | Loc = {x: 1 , y: 34};
+
+coordinates = {lat: 34, long: 56}; // Its valid because coordinates is a union type of Point and Loc
+
+
+---------------------------------------
+* Type Narrowing w/ Union Types
+---------------------------------------
+-> Narrowing the Type is simply doing a type check before working with a value
+-> If you value is a string you may want to use it differently than if you got a number
+-> Since unions allow multiple types for a value, it's good to check what cam through before 
+working with it
+
+const isTeenager = (age: number | string) => {
+    if(typeof age === 'string') {
+        console.log(age.charAt(0) === 1);
+    }
+
+    if(typeof age === 'number') {
+        console.log(age > 12 && age < 20);
+    }
+}
+
+isTeenager('20'); // false
+isTeenager(13); // true
+
+function calculateTax(price: number | string, tax: number) {
+    //return price * tax; // Error: Operator '*' cannot be applied to types 'string | number' and 'number'.
+    //price.replace("$", ""); // Error: Property 'replace' does not exist on type 'string | number'.
+
+    if(typeof price === 'string') {
+        price = parseFloat(price.replace("$", ""));
+        // price = .... // Now price is a number
+    }
+
+    return price * tax;
+}
+
+
+---------------------------------------
+* Union Types and Arrays
+---------------------------------------
+const stuff: (number | string)[] = [1,2,3,4, "hello", "world"];
+const coords: (Point | Loc)[] = [{x: 1, y: 2}, {lat: 34, long: 56}];
+
+const nums: number[] = [1,2,3,4];
+// const stuff: any[] = [1,2,3,4, "hello", true, [1,2,3,4], {name: "John"}];
+// const stuff: number[] | string[] = [1,2,3] or ["hello", "world"];
+// number[] | string[] means that stuff can be either an array of numbers or an array of strings
+
+
+---------------------------------------
+* Literal Types
+---------------------------------------
+-> Literal types are not just types - but the values themselves too!
+-> On it's own, that's not super helpful
+-> But combine it with something like unions and you can have very fine-tuned type options
+for TypeScript to enforce
+
+> const giveAnswer = (answer: "yes" | "no" | "maybe") => {
+    return `The answer is ${answer}.`;
+}
+
+giveAnswer("no") // The answer is "no" (ok)
+giveAnswer("oh bot I'm not sure"); // CANT PROVIDE ANYTHING ELSE
+
+let zero: 0 = 0
+//zero = 2; // Error: Type '2' is not assignable to type '0'
+
+let hi: "hi" = "hi";
+//hi = "hello"; // Error: Type '"hello"' is not assignable to type '"hi"'
+
+let answer: "yes" | "no" | "maybe" = "yes";
+answer = "no";
+answer = "maybe";
+//answer = "ok"; // Error: Type '"ok"' is not assignable to type '"yes" | "no" | "maybe"'
+
+let mood: "happy" | "sad" | "angry" | "meh" = "happy";
+mood = "sad";
+mood = "angry";
+mood = "meh";
+//mood = "ok"; // Error: Type '"ok"' is not assignable to type '"happy" | "sad" | "angry" | "meh"'
+
+type DayOfWeek = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+
+let today: DayOfWeek = "Monday";
+// today = "Holiday"; // Error: Type '"Holiday"' is not assignable to type 'DayOfWeek'
+// Because "Holiday" is not a valid value for DayOfWeek (Monday-Tuesday-Wednesday-Thursday-Friday-Saturday-Sunday)
+
+########################################################################################################
+
+
+########################################################################################################
+* SECTION 8 : Tuples And Enums *
+---------------------------------------
+* Tuples
+---------------------------------------
+-> Tuples are a special type exclusive to TypeScript 
+-> Tuples are arrays of fixed lengths and ordered with specific types like super rigid arrays
+
+> let myTuple: [number, string];
+
+myTuple = [10, "Typescript is fun"]; (ok)
+myTuple = ["Typescript is fun", 10]; (not ok)
+
+//const color: number[] = [255, 0, 0];
+//const color: [number, number, number] = [255, 0]; // Error: Type 'string' is not assignable to type 'number'.
+//const color: [number, number, number] = [255, 0, 0, 0, 2]; // Error: Type 'number' is not assignable to type 'undefined'. 
+//const color: [number, number, number] = [255, 0, 0, 2]; // Source has 4 elements, target expects 3.
+
+const color: [number, number, number] = [255, 0, 0];
+
+type HTTPResponse = [number, string];
+
+const goodRes: HTTPResponse = [200, 'OK'];
+//goodRes[0] = "200"; // Error: Type 'string' is not assignable to type 'number'.
+
+/* goodRes.push(123); // No error
+goodRes.pop(); // No error
+goodRes.pop();   
+goodRes.pop();
+*/ 
+console.log(goodRes);
+
+// Why not to use objects for tuples
+
+type HTTPResponseType = {
+    code: number,
+    message: string
+}
+
+const goodResObj: HTTPResponseType = { code: 200, message: 'OK' };
+
+
+---------------------------------------
+* Enums
+---------------------------------------
+-> Enums allow us to define a "set of named constants"
+-> We can give these constants numeric or string values
+-> There's quite a few options when it comes to enums
+
+> enum Responses {
+    no, // 0
+    yes, // 1
+    maybe // 2
+}
+
+> enum Responses {
+    no = 2, // 2
+    yes, // 3
+    maybe // 4
+}
+
+> enum Responses {
+    no = 2, // 2
+    yes = 10, // 10
+    maybe = 24 // 24
+}
+
+> enum Responses {
+    no = 'No',
+    yes = 'Yes',
+    maybe = 'Maybe'
+}
+
+> enum Responses {
+    no = 0,
+    yes = 1,
+    maybe = 'Maybe'
+}
+
+
+enum OrderStatus {
+    PENDING,
+    SHIPPED,
+    DELIVERED,
+    RETURNED
+}
+
+
+const myStatus = OrderStatus.DELIVERED;
+
+
+function isDelivered(status: OrderStatus): boolean {
+    return status === OrderStatus.DELIVERED
+}
+
+isDelivered(myStatus); // true
+
+enum ArrowKeys {
+    UP = "up",
+    DOWN = "down",
+    LEFT = "left",
+    RIGHT = "right",
+    ERROR = 235
+}
+
+ArrowKeys.LEFT; // "left"
+ArrowKeys.RIGHT; // "right"
+ArrowKeys.ERROR; // 235
+
+########################################################################################################
+
+
+########################################################################################################
+* SECTION 9 : Interfaces *
+---------------------------------------
+* Interfaces
+---------------------------------------
+-> Interfaces serve almost the exact some purpose as type aliases (with slightly different syntax)
+-> We can use them to create reusable, modular types that describe the "shapes of objects"
+
+> interface Person {
+    name: string;
+    age: number;
+}
+
+const sayHappyBirthday = (person: Person) => {
+    return `Hey ${person.name}, congrats on turning ${person.age}`
+}
+
+sayHappyBirthday({name: "Vedat", age: 23})
+
+interface Point {
+    x: number,
+    y: number
+}
+
+const pt: Point = { x: 123, y: 1234 };
+
+---------------------------------------
+* Readonly and Optional Interface Properties
+---------------------------------------
+interface Person {
+    readonly id: number,
+    first: string,
+    last: string,
+    nickname?: string
+}
+
+const thomas: Person = { id: 123123, first: 'Thomas', last: 'Jefferson', nickname: "Tom" };
+const john: Person = { id: 123123123, first: 'John', last: 'Adams', nickname: 'The Atlas of Independence' };
+
+thomas.first = "Tommy";
+//thomas.id = 123; // Error: Cannot assign to 'id' because it is a read-only property.
+
+---------------------------------------
+* Interface Methods
+---------------------------------------
+interface Person {
+    readonly id: number;
+    first: string;
+    last: string;
+    nickname?: string;
+    //sayHi: () => string;
+    sayHi(): string;
+}
+
+const thomas: Person = {
+    id: 123123, 
+    first: 'Thomas', 
+    last: 'Jefferson', 
+    nickname: "Tom",
+    sayHi: () => {
+        return `Hello, my name is ${this.first} ${this.last}`;
+    }
+};
+
+
+---------------------------------------
+* Interface Methods Parameters
+---------------------------------------
+interface Product {
+    name: string,
+    price: number,
+    applyDiscount(discount: number): number;
+}
+
+
+const shoes: Product = {
+    name: 'Nike Air Max',
+    price: 100,
+    applyDiscount(amount: number): number {
+        const newPrice = this.price * (1-amount);
+        this.price = newPrice;
+        return this.price;
+    }
+};
+
+console.log(shoes.applyDiscount(0.4));
+
+---------------------------------------
+* Reopening Interfaces
+---------------------------------------
+interface Dog {
+    name: string;
+    age: number;
+}
+
+interface Dog {
+    breed: string;
+    bark(): string;
+}
+
+const fido: Dog = {
+    name: 'Fido',
+    age: 3,
+    breed: 'Golden Retriever',
+    //bark: () => 'Woof'
+    bark() {
+        return "Woof Woof!"
+    }
+};
+
+
+---------------------------------------
+* Extending Interfaces
+---------------------------------------
+interface ServiceDog extends Dog {
+    isTrained: boolean;
+    performTask(): string;
+}
+
+const buddy: ServiceDog = {
+    name: 'Buddy',
+    age: 5,
+    breed: 'Labrador',
+    isTrained: true,
+    bark() {
+        return "Woof Woof!";
+    },
+    performTask() {
+        return "I'm helping my human!";
+    }
+};
+
+
+console.log(buddy);
+console.log(buddy.performTask());
+console.log(buddy.bark());
+
+
+interface ServiceDog extends Dog {
+    job: "drug sniffer" | "bomb" | "guide dog";
+}
+
+const chewy: ServiceDog = {
+    name: 'Chewy',
+    age: 4.5,
+    breed: 'German Shepherd',
+    job: 'bomb',
+    bark() {
+        return "Woof Woof!";
+    }
+}
+
+---------------------------------------
+* Interface Multiple Inheritance
+---------------------------------------
+interface Person {
+    name: string;
+}
+
+interface Employee {
+    readonly id: number;
+    email: string;
+}
+
+interface Engineer extends Person, Employee {
+    level: string
+    languages: string[];
+}
+
+const pierre: Engineer = {
+    name: 'Pierre',
+    id: 123,
+    email: 'pierre@gmail.com',
+    level: 'Senior',
+    languages: ['JavaScript', 'TypeScript', 'Python']
+}
+
+########################################################################################################
+
+
+########################################################################################################
+* SECTION 10 : The Typescript Compiler *
+---------------------------------------
+* Compiling To JavaScript
+---------------------------------------
+> tsc --init --> You can see the "tsconfig" file
+> Create index.ts
+
+const Chicken = {
+    ...
+}
+
+const norma: Chicken = {
+    ...
+}
+
+> tsc index.ts
+-> You'll get "index.js"
+
+---------------------------------------
+* Watch Mode
+---------------------------------------
+> tsc --watch or tsc -w <fileName> or just leave it empty for watch all ts files and compile
+automatically when something has changed that any of that ts files
+-> It allows you to watch codes
+
+
+---------------------------------------
+* Working Wİth Multiple Files
+---------------------------------------
+-> use tsc for compiling all ts files
+-> use tsc -w watch for watching all ts files
+-> use tsc -w <filenames> for watching specific file
+
+
+---------------------------------------
+* The Files Compiler Option
+---------------------------------------
+-> In tsconfig.json file, you can add "files" part
+> "files": ...
+-> For giving specific files that we want to tsc that run only, we can add [] for the files
+that we want to compile js->ts
+
+.....
+"files": [fileName1, fileName2, fileName3]
+
+-> "tsc" command now will compiler js to ts only flieName1-2-3
+
+---------------------------------------
+* Include & Exclude Options
+---------------------------------------
+> "include": ["src"],
+> //"exclude": ["src/dontTouch.ts"]
+> "exclude": ["**.test.ts", "src/dontTouch.ts"]
+
+
+---------------------------------------
+* Outdir Option
+---------------------------------------
+"outdir": "./dist",
+.....
+########################################################################################################
+
+########################################################################################################
+* SECTION 11 : Mini Project: The DOM, Type Assertions*
+---------------------------------------
+* A Mini Project Setup
+---------------------------------------       
+-> Create folder called "Mini Project"
+-> Use "tsc --init" for creating tsconfig file
+-> Create files "src" and "dist"
+-> Update "outdir" part in tsconfig for "./dist"
+-> Update "include": [src] and exclude part at bottom
+-> Then use "npm init -y" for create package.json file
+-> Install "lite-server" with "npm install"
+-> Update package.json scripts part with "start": "lite-server",
+-> Run "tsc -w" for one terminal
+-> Run "npm start" for another terminal
+
+
+---------------------------------------
+* Working With The DOM
+--------------------------------------- 
+-> const btn = document.getElementById("btn") as HTMLButtonElement
+
+---------------------------------------
+* The Lib Compiler Option
+---------------------------------------
+-> The "lib" compiler option in TypeScript provides fine-grained control over the included
+type definitions, ensuring that only the neccessary libraries are included during the compilation
+process
+-> This can help optimize the compilation process and prevent the use of APIs that are not relevant to
+your project
+-> lib: ["dom", "es2021", "esnext".....]
+
+
+---------------------------------------
+* TypeScript's Non-Null Assertion Operator
+---------------------------------------
+-> "!" is saying "it cannot be null"
+-> const btn = document.getElementById("btn")!;
+-> Type of that btn is always "HTMLElement"
+
+
+---------------------------------------
+* Type Assertions
+---------------------------------------
+-> Sometimes you might have more specific information about a value's type, and you want 
+to make sure Typescript knows it too.
+-> You can assert a value's type by using "as" keyword, followe4d by the specific 
+type you want to assert
+
+const myPic = document.querySelector("profile-image")
+
+const myPic = document.querySelector("profile-image") as HTMLImageElement;
+
+
+let mystery: unknown = "Hello World :)";
+
+const numChars = (mystery as string).length; // Error: Object is of type 'unknown'
+
+let mystery: unknown = 4;
+
+const numChars = (mystery as string).length; // ERROR: Property 'length' does not exist on type 'string | number'.
+
+---------------------------------------
+* Type Assertions With The DOM
+---------------------------------------
+const btn = document.getElementById("btn")! as HTMLButtonElement;
+const input = document.getElementById("todoinput")! as HTMLInputElement;
+
+input
+
+btn.addEventListener("click", () => {
+    const inputValue = input.value;
+    alert("You entered: " + inputValue)
+    input.value = "" 
+});
+
+-> Another way to assert type into element is (<Type>variable)
+
+const input = document.getElementById("todoinput")!;
+
+(<HTMLInputElement>input).value
+
+---------------------------------------
+* Working With Events
+---------------------------------------
+-> If we are using "e" in the same context with form.addEventListener
+Typescript automatically knows that "e" is type of "SubmitEvent"
+
+/* form.addEventListener("submit", (e) => {
+    e.preventDefault(); 
+    console.log("Form was submitted! at : " + Date.now())   
+}) */
+
+-> If we split that function TS can't understand what "e" type for that reason we should
+say e is type of "SubmitEvent" in handleSubmit function
+
+const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    console.log("Form was submitted! at : " + Date.now())
+}
+
+form.addEventListener("submit", handleSubmit);
+
+
+---------------------------------------
+* Building The Todo List
+---------------------------------------
+const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    const newTodoText = input.value;
+    const newLI = document.createElement("li");
+    const newCheckbox = document.createElement("input");
+    newCheckbox.type = "checkbox";
+    newLI.append(newTodoText);
+    newLI.append(newCheckbox);
+    todolist.append(newLI);
+    input.value = "";
+}
+
+
+---------------------------------------
+* Adding in an Interface
+---------------------------------------
+interface TodoItem {
+    text: string;
+    completed: boolean;
+}
+
+const todos: TodoItem[] = [];
+
+const handleSubmit = (e: SubmitEvent) => {
+    const newTodo: Todo = {
+        text: input.value,
+        completed: false
+    };
+    createTodoElement(todo);
+
+    todos.push(newTodo);
+
+    input.value = "";
+}
+
+const createTodoElement = (todo: Todo) => {
+    const newLI = document.createElement("li");
+    const newCheckbox = document.createElement("input");
+    newCheckbox.type = "checkbox";
+    newLI.append(todo.text);
+    newLI.append(newCheckbox);
+    todolist.append(newLI);
+}
+
+
+
+form.addEventListener("submit", handleSubmit);
+
+
+---------------------------------------
+* Connecting to LocalStorage
+---------------------------------------
+* What is localStorage and why its been using ?
+-> LocalStorage is a web storage API provided by modern web browsers that allows you to
+store key-value pairs in a web browser on the client side
+-> Unlike cookies, which can be used for similar purposes, LocalStorage allows for larger
+amounts of data to be stored,a nd this data persists even after the browser closed and 
+reopened
+-> Common Use Cases
+--> Storing User Preferences | Caching Data | Saving Application State | Session Management
+
+
+const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    const newTodo: Todo = {
+        text: input.value,
+        completed: false
+    };
+
+    createTodo(newTodo)
+    todos.push(newTodo);
+
+    *** localStorage.setItem("todos", JSON.stringify(todos));
+
+    input.value = "";
+}
+
+
+function readTodos(): Todo[] {
+    const todosJSON = localStorage.getItem("todos");
+    if(todosJSON === null) return [];
+    return JSON.parse(todosJSON);
+}
+
+const todos: Todo[] = readTodos();
+todos.forEach(createTodo);
+
+---------------------------------------
+* Todo List Finishing Touches
+---------------------------------------
+const saveTodos = () => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+const createTodo = (todo: Todo) => {
+    const newLI = document.createElement("li");
+    const newCheckbox = document.createElement("input");
+    newCheckbox.type = "checkbox";
+    + newCheckbox.checked = todo.completed;
+    + newCheckbox.addEventListener("change", () => {
+    +    todo.completed = !todo.completed;
+    +    saveTodos();
+    + });
+    newLI.append(todo.text);
+    newLI.append(newCheckbox);
+    todolist.append(newLI);
+}
+
+########################################################################################################
+
+########################################################################################################
+* SECTION 12 : Classes 
+---------------------------------------
+* Javascript Classes
+--------------------------------------- 
+-> Classes are templates for createing objects in Javascript
+-> They contain a few different important pieces which allow creation and extension of 
+customized objects
+
+class Person {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    greet() {
+        return `Hello ${this.name}`;
+    }
+}
+
+const vedat = new Person("vedat", 22);
+
+vedat.greet();
+
+class Player {
+    taunt() {
+        console.log("BOO!")
+    }
+}
+
+const player1 = new Player();
+player1.taunt();
+
+const player2 = new Player();
+player2.taunt();
+
+
+---------------------------------------
+* Constructors
+--------------------------------------- 
+
+
+class Player {
+    constructor(first, last) {
+        this.first = first;
+        this.last = last;
+    }
+    taunt() {
+        console.log("BOO!")
+    }
+}
+
+const player1 = new Player("vedat", "cinbat");
+player1.taunt();
+
+const player2 = new Player("charlie", "brown");
+player2.taunt();
+
+
+---------------------------------------
+* Class Fields
+--------------------------------------- 
+-> Every instance of Player class will have the same fields of score and numLives
+class Player {
+    score = 0;
+    numLives = 10;
+
+    constructor(first, last) {
+        this.first = first;
+        this.last = last;
+    }
+
+    taunt() {
+        console.log("BOO!")
+    }
+}
+
+---------------------------------------
+* Private Fields
+---------------------------------------
+class Player {
+    #score = 0;
+    numLives = 10;
+
+    constructor(first, last) {
+        this.first = first;
+        this.last = last;
+        this.#secret();
+    }
+
+    getScore() {
+        return this.#score;
+    }
+
+    setScore(newScore) {
+        this.#score = newScore;
+    }
+
+    taunt() {
+        console.log("BOO!")
+    }
+
+    loseLife() {
+        this.numLives--;
+    }
+
+    #secret() {
+        console.log("This is a secret method");
+    
+    }
+}
+
+---------------------------------------
+* Getters & Setters
+---------------------------------------
+    get score() {
+        return this.#score;
+    }
+
+    set score(newScore) {
+        if (newScore > 1000) {
+            console.log("Cheater!!! You cannot score more than 1000 points!" + newScore);
+            return;
+        }
+        if(newScore < 0) {
+            console.log("Score can't be negative!");
+            return;
+        }
+        this.#score = newScore;
+    }
+
+
+console.log(player1.score);
+console.log("Player1 score : " + player1.score);
+player1.score = 100123123
+console.log(player1.score);
+
+console.log("FullName Player1: " + player1.fullName);
+console.log("Score Player1: " + player1.score)
+
+---------------------------------------
+* Static Properties & Methods
+---------------------------------------
+-> In JS, static properties and methods are defined on the class itself rather than on instances of the class
+-> This means you can access static properties and methods directly from the class, without 
+needing to create an instance of the class
+
+-> Static Method: are functions defined on the class itself. You see the "static" keyword to 
+define a static method. These methods can be called directly on the class without creating an
+instance
+
+class MyClass {
+    static myStaticMethod() {
+        return 'This is a static method';
+    }
+}
+
+console.log(MyClass.myStaticMethod()) // Output: "This is a static method"
+
+---------------------------------------
+* Extending Classes
+---------------------------------------
+class AdminPlayer extends Player {
+    isAdmin = true;
+};
+
+const adminPlayer = new AdminPlayer();
+
+---------------------------------------
+* The Dreaded Super()
+---------------------------------------
+-> You have to call first "super" function from child class from constructor()
+
+class AdminPlayer extends Player {
+    isAdmin = true;
+
+    constructor(first, last, powers) {
+        super(first, last);
+        this.powers = powers;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ########################################################################################################

@@ -1,0 +1,23 @@
+# TypeScript Notes #
+- This git repo includes notes and codes that seperated with topics
+- Topics
+  - Introduction
+  - Installation & Setup
+  - Type Annotation Basics
+  - Functions
+  - Object Types
+  - Array Types
+  - Union Types
+  - Tuples and Enums
+  - Interfaces
+  - The TypeScript Compiler
+  - Classes
+  - TypeScript Classes
+  - Generics
+  - Type Narrowing
+  - Working With Type Declarations
+  - Modules
+  - Webpack & TypeScript
+  - React & TypeScript
+  - LEETCODES
+  - ADVANCED TYPESCRIPT NOTES
