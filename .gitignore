@@ -1,3 +1,2 @@
 /.vscode
-// Remove all node_modules in subdirectories
 **/node_modules
