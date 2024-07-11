@@ -21,6 +21,6 @@ const juniper: Chicken = {
 
 console.log(norma);
 
-function doThing(thing) {
+/* function doThing(thing) {
     console.log(thing);
-}
+} */

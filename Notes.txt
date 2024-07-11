@@ -961,3 +961,284 @@ const pierre: Engineer = {
 }
 
 ########################################################################################################
+
+
+########################################################################################################
+* SECTION 10 : The Typescript Compiler *
+---------------------------------------
+* Compiling To JavaScript
+---------------------------------------
+> tsc --init --> You can see the "tsconfig" file
+> Create index.ts
+
+const Chicken = {
+    ...
+}
+
+const norma: Chicken = {
+    ...
+}
+
+> tsc index.ts
+-> You'll get "index.js"
+
+---------------------------------------
+* Watch Mode
+---------------------------------------
+> tsc --watch or tsc -w <fileName> or just leave it empty for watch all ts files and compile
+automatically when something has changed that any of that ts files
+-> It allows you to watch codes
+
+
+---------------------------------------
+* Working Wİth Multiple Files
+---------------------------------------
+-> use tsc for compiling all ts files
+-> use tsc -w watch for watching all ts files
+-> use tsc -w <filenames> for watching specific file
+
+
+---------------------------------------
+* The Files Compiler Option
+---------------------------------------
+-> In tsconfig.json file, you can add "files" part
+> "files": ...
+-> For giving specific files that we want to tsc that run only, we can add [] for the files
+that we want to compile js->ts
+
+.....
+"files": [fileName1, fileName2, fileName3]
+
+-> "tsc" command now will compiler js to ts only flieName1-2-3
+
+---------------------------------------
+* Include & Exclude Options
+---------------------------------------
+> "include": ["src"],
+> //"exclude": ["src/dontTouch.ts"]
+> "exclude": ["**.test.ts", "src/dontTouch.ts"]
+
+
+---------------------------------------
+* Outdir Option
+---------------------------------------
+"outdir": "./dist",
+.....
+########################################################################################################
+
+########################################################################################################
+* SECTION 11 : Mini Project: The DOM, Type Assertions*
+---------------------------------------
+* A Mini Project Setup
+---------------------------------------       
+-> Create folder called "Mini Project"
+-> Use "tsc --init" for creating tsconfig file
+-> Create files "src" and "dist"
+-> Update "outdir" part in tsconfig for "./dist"
+-> Update "include": [src] and exclude part at bottom
+-> Then use "npm init -y" for create package.json file
+-> Install "lite-server" with "npm install"
+-> Update package.json scripts part with "start": "lite-server",
+-> Run "tsc -w" for one terminal
+-> Run "npm start" for another terminal
+
+
+---------------------------------------
+* Working With The DOM
+--------------------------------------- 
+-> const btn = document.getElementById("btn") as HTMLButtonElement
+
+---------------------------------------
+* The Lib Compiler Option
+---------------------------------------
+-> The "lib" compiler option in TypeScript provides fine-grained control over the included
+type definitions, ensuring that only the neccessary libraries are included during the compilation
+process
+-> This can help optimize the compilation process and prevent the use of APIs that are not relevant to
+your project
+-> lib: ["dom", "es2021", "esnext".....]
+
+
+---------------------------------------
+* TypeScript's Non-Null Assertion Operator
+---------------------------------------
+-> "!" is saying "it cannot be null"
+-> const btn = document.getElementById("btn")!;
+-> Type of that btn is always "HTMLElement"
+
+
+---------------------------------------
+* Type Assertions
+---------------------------------------
+-> Sometimes you might have more specific information about a value's type, and you want 
+to make sure Typescript knows it too.
+-> You can assert a value's type by using "as" keyword, followe4d by the specific 
+type you want to assert
+
+const myPic = document.querySelector("profile-image")
+
+const myPic = document.querySelector("profile-image") as HTMLImageElement;
+
+
+let mystery: unknown = "Hello World :)";
+
+const numChars = (mystery as string).length; // Error: Object is of type 'unknown'
+
+let mystery: unknown = 4;
+
+const numChars = (mystery as string).length; // ERROR: Property 'length' does not exist on type 'string | number'.
+
+---------------------------------------
+* Type Assertions With The DOM
+---------------------------------------
+const btn = document.getElementById("btn")! as HTMLButtonElement;
+const input = document.getElementById("todoinput")! as HTMLInputElement;
+
+input
+
+btn.addEventListener("click", () => {
+    const inputValue = input.value;
+    alert("You entered: " + inputValue)
+    input.value = "" 
+});
+
+-> Another way to assert type into element is (<Type>variable)
+
+const input = document.getElementById("todoinput")!;
+
+(<HTMLInputElement>input).value
+
+---------------------------------------
+* Working With Events
+---------------------------------------
+-> If we are using "e" in the same context with form.addEventListener
+Typescript automatically knows that "e" is type of "SubmitEvent"
+
+/* form.addEventListener("submit", (e) => {
+    e.preventDefault(); 
+    console.log("Form was submitted! at : " + Date.now())   
+}) */
+
+-> If we split that function TS can't understand what "e" type for that reason we should
+say e is type of "SubmitEvent" in handleSubmit function
+
+const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    console.log("Form was submitted! at : " + Date.now())
+}
+
+form.addEventListener("submit", handleSubmit);
+
+
+---------------------------------------
+* Building The Todo List
+---------------------------------------
+const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    const newTodoText = input.value;
+    const newLI = document.createElement("li");
+    const newCheckbox = document.createElement("input");
+    newCheckbox.type = "checkbox";
+    newLI.append(newTodoText);
+    newLI.append(newCheckbox);
+    todolist.append(newLI);
+    input.value = "";
+}
+
+
+---------------------------------------
+* Adding in an Interface
+---------------------------------------
+interface TodoItem {
+    text: string;
+    completed: boolean;
+}
+
+const todos: TodoItem[] = [];
+
+const handleSubmit = (e: SubmitEvent) => {
+    const newTodo: Todo = {
+        text: input.value,
+        completed: false
+    };
+    createTodoElement(todo);
+
+    todos.push(newTodo);
+
+    input.value = "";
+}
+
+const createTodoElement = (todo: Todo) => {
+    const newLI = document.createElement("li");
+    const newCheckbox = document.createElement("input");
+    newCheckbox.type = "checkbox";
+    newLI.append(todo.text);
+    newLI.append(newCheckbox);
+    todolist.append(newLI);
+}
+
+
+
+form.addEventListener("submit", handleSubmit);
+
+
+---------------------------------------
+* Connecting to LocalStorage
+---------------------------------------
+* What is localStorage and why its been using ?
+-> LocalStorage is a web storage API provided by modern web browsers that allows you to
+store key-value pairs in a web browser on the client side
+-> Unlike cookies, which can be used for similar purposes, LocalStorage allows for larger
+amounts of data to be stored,a nd this data persists even after the browser closed and 
+reopened
+-> Common Use Cases
+--> Storing User Preferences | Caching Data | Saving Application State | Session Management
+
+
+const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    const newTodo: Todo = {
+        text: input.value,
+        completed: false
+    };
+
+    createTodo(newTodo)
+    todos.push(newTodo);
+
+    *** localStorage.setItem("todos", JSON.stringify(todos));
+
+    input.value = "";
+}
+
+
+function readTodos(): Todo[] {
+    const todosJSON = localStorage.getItem("todos");
+    if(todosJSON === null) return [];
+    return JSON.parse(todosJSON);
+}
+
+const todos: Todo[] = readTodos();
+todos.forEach(createTodo);
+
+---------------------------------------
+* Todo List Finishing Touches
+---------------------------------------
+const saveTodos = () => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+const createTodo = (todo: Todo) => {
+    const newLI = document.createElement("li");
+    const newCheckbox = document.createElement("input");
+    newCheckbox.type = "checkbox";
+    + newCheckbox.checked = todo.completed;
+    + newCheckbox.addEventListener("change", () => {
+    +    todo.completed = !todo.completed;
+    +    saveTodos();
+    + });
+    newLI.append(todo.text);
+    newLI.append(newCheckbox);
+    todolist.append(newLI);
+}
+
+########################################################################################################
