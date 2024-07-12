@@ -1425,27 +1425,478 @@ class AdminPlayer extends Player {
     }
 };
 
+########################################################################################################
 
 
+########################################################################################################
+* SECTION 13 : TypeScript Classes 
+---------------------------------------
+* Annotating Classes in TypeScript
+--------------------------------------- 
+-> You need to specify what every instances will have for class "Player"
+> first: string;
+> last: string;
+
+class Player {
+    first: string;
+    last: string;
+
+    constructor(first: string, last: string) {
+        this.first = first;
+        this.last = last;
+    }
+}
+
+---------------------------------------
+* Class Fields in TypeScript
+---------------------------------------
+class Player {
+    first: string;
+    last: string;
+    score: number;
+//or  score: number = 0;
+
+    constructor(first: string, last: string) {
+        this.first = first;
+        this.last = last;
+        //this.score = 0;
+    }
+}
+
+---------------------------------------
+* readonly Class Properties
+---------------------------------------
+class Player {
+    readonly first: string;
+    readonly last: string;
+    score: number = 0;
+
+    constructor(first: string, last: string) {
+        this.first = first;
+        this.last = last;
+    }
+}
+
+const player1 = new Player("Vedat", "Cinbat");
+player1.first.toUpperCase() --> Error: Cannot assign to 'first' because it is a read-only property.
 
 
+---------------------------------------
+* The public Modifier
+---------------------------------------
+-> Default all properties is "public" which means they can be reached out of the class
+
+const elton = new Player('Elton', 'John');
+console.log(`Player ${elton.first} ${elton.last} has a score of ${elton.score}.`);
 
 
+---------------------------------------
+* The private Modifier
+---------------------------------------
+class Player {
+    public readonly first: string;
+    public readonly last: string;
+    public score: number = 0;
+    //private score: number = 0;
+
+    constructor(first: string, last: string) {
+        this.first = first;
+        this.last = last;
+        this.secretMothod();
+    }
+
+    private calculateExp(): number {
+        return this.score * 2;
+    }
+
+    public getExp(): string {
+        return `${this.first} ${this.last} has ${this.calculateExp()} experience points.`;
+    }
+
+    private secretMothod(): void {
+        console.log('This is a secret method.');
+    }
+}
 
 
+---------------------------------------
+* Parameter Properties Shorthand
+---------------------------------------
+class Player {
+    constructor(
+        public first: string,
+        public last: string,
+        private score: number
+    ) {}
+
+    private secretMethod(): string {
+        return `This is private method!`;
+    }
+}
+
+const player1 = new Player("Vedat", "Cinbat", 100)
+console.log(player1);
+{
+    first: "Vedat",
+    last: "Cinbat",
+    score: 100,
+    [[Prototype]]: Object
+}
+
+---------------------------------------
+* Getters and Setters
+---------------------------------------
+class Player {
+    //public score: number = 0;
+    //private score: number = 0;
+
+    constructor(public first: string, private last: string, private _score: number) { }
+
+    private secretMothod(): void {
+        console.log('This is a secret method.');
+    }
+
+    get FullName(): string {
+        return `${this.first} ${this.last}`;
+    }
+
+    get score(): number {   
+        return this._score;
+    }
+
+    set score(newScore: number) {
+        if(newScore < 0) {
+            throw new Error('Score cannot be negative.');
+        }
+        if(newScore > 10000) {
+            throw new Error('Score cannot be greater than 10000.');
+        }
+        this._score = newScore;
+    }
+
+    set FullName(value: string) {
+        const parts = value.split(' ');
+        this.first = parts[0];
+        this.last = parts[1];
+    }
+}
+
+---------------------------------------
+* The Protected Modifier
+---------------------------------------
+class SuperPlayer extends Player {
+    public isAdmin: boolean = true;
+
+    maxScore() {
+        this._score = 999999;
+    }
+
+    get getMaxScore(): string {
+        return `The maximum score of ${this.FullName} is ${this.score * 10}.`;
+    }
+}
+
+const vedat = new SuperPlayer('Vedat', 'Cinbat', 100);
+vedat.maxScore();
+console.log(vedat.getMaxScore);
 
 
+---------------------------------------
+* Classes and Interfaces
+---------------------------------------
+interface Colorful {
+    color: string;
+}
+
+interface Printable {
+    print(): void;
+}
+
+class Bike implements Colorful {
+    // public color: string;
+    constructor(public color: string) {}
+}
+
+class Jacket implements Colorful, Printable {
+    // public color: string;
+    // public brand: string;
+    constructor(public brand: string, public color: string) {}
+    print() {
+        console.log(`This is a ${this.color} ${this.brand} jacket.`);
+    }
+}
 
 
+---------------------------------------
+* Abstract Classes
+---------------------------------------
+-> Abstract classes are classes that cannot be instantiated directly
+-> They are meant to serve as base classes for other classes
+-> Abstract classes can contain implementation details for some methods, but they typically include 
+abstract methods that must be implemented by derived classes
+-> Key point about abstract classes : 
+--> 1. Definition: defined using the "abstract" keyword
+--> 2. Usage: Abstract classes are used to provide a common base class with some common 
+functionality and to define a contract for derived classes
+--> 3. Inheritance: A class extend an abstract class and must implement all abstract methods
+from the abstract class
 
 
+abstract class Employee {
+    constructor(public first: string, public last: string) {}
+    abstract getSalary(): number;
+    greet(){
+        console.log(`Hello ${this.first} ${this.last}`);
+    }
+}
+
+class FullTimeEmployee extends Employee {
+    constructor(first: string, last: string, public salary: number) {
+        super(first, last);
+    }
+    getSalary(): number {
+        return this.salary;
+    }
+}
+
+class PartTimeEmployee extends Employee {
+    constructor(first: string, last: string, public hourlyRate: number, public hoursWorked: number) {
+        super(first, last);
+    }
+    getSalary(): number {
+        return this.hourlyRate * this.hoursWorked;
+    }
+}
+
+const fullTimeEmployee = new FullTimeEmployee('Vedat', 'Cinbat', 100000);
+const partTimeEmployee = new PartTimeEmployee('Elton', 'John', 50, 100);
+
+console.log(fullTimeEmployee);
+console.log(partTimeEmployee);
+
+########################################################################################################
+
+########################################################################################################
+* SECTION 14 : Generics 
+---------------------------------------
+* Introducing Generics
+---------------------------------------
+-> Generics allow us to define reuable functions and classes that work with multiple types rather 
+than a single type
+-> The syntax is....not pretty
+-> They are used all over the place, so its best to get comfortable with them :)
+
+function wrapInArray<T>(element: T): T[] {
+    return [element]
+}
+
+-index.html-
+    <input id="username" type="text" placeholder="username" value="vedatcinbat28">
+    <button class="btn">Click Me</button>
+
+    <script src="dist/index.js"></script>
+---------------------------------------------
+
+index.ts
+
+const inputEl = document.querySelector<HTMLInputElement>("#username")!;
+const buttonEl = document.querySelector<HTMLButtonElement>(".btn")!;
+
+inputEl.value = "Hacked";
+
+button.addEventListener('click', () => {
+    console.log("Button was clicked");
+});
 
 
+---------------------------------------
+* Writing Our First Generic
+---------------------------------------
+function numberIdentity(item: number): number {
+    return item;
+}
+function stringIdentity(item: string): string {
+    return item;
+}
+function booleanIdentity(item: boolean): boolean {
+    return item;
+}
+
+/* function identity(item: any): any {
+    return item;
+}
+ */
+
+***
+function identity<T>(item: T): T {
+    return item;
+}
+***
+
+identity<number>(1);
+identity<string>("Hello");
+identity<boolean>(true);
 
 
+---------------------------------------
+* Writing Another Generic Function
+---------------------------------------
+function getRandomElement<T>(items: T[]): T {
+    return items[Math.floor(Math.random() * items.length)];
+}
+
+const randomStr = getRandomElement<string>(["a", "b", "c"]);
+const randomNum = getRandomElement<number>([1, 2, 3]);
+const randomBool = getRandomElement<boolean>([true, false, true]);
+
+console.log(randomStr);
+console.log(randomNum);
+console.log(randomBool);
 
 
+type Cat = {
+    name: string;
+    age: number;
+}
+
+function getRandomCat<Cat>(cats: Cat[]): Cat {
+    const randomCat = cats[Math.floor(Math.random() * cats.length)];
+    return randomCat;
+}
+
+const catArr = [
+    {
+        name: "Fluffy",
+        age: 2
+    },
+    {
+        name: "Whiskers",
+        age: 3
+    },
+    {
+        name: "Socks",
+        age: 4
+    }
+]
+
+const randomCat = getRandomCat<Cat>(catArr);
+
+console.log(randomCat);
 
 
+---------------------------------------
+* Generics, Arrow Functions, & TSX Files
+---------------------------------------
+-> You have to add , after T in tsx files : 
+const getRandomElement = <T,>(items: T[]): T => {
+    return items[Math.floor(Math.random() * items.length)];
+}
+
+---------------------------------------
+* Generics With Multiple Types
+---------------------------------------
+function merge<T, U>(obj1: T, obj2: U): T & U {
+    return {
+        ...obj1,
+        ...obj2
+    }
+}
+
+const comboObj = merge(
+    {
+        name: "Vedat"
+    },
+    {
+        pets: ["a", "b", "c"]
+    }
+)
+
+console.log(comboObj);
+
+
+---------------------------------------
+* Adding Type Constraints
+---------------------------------------
+-> Use extends keyword to specify that generic types
+function merge<T extends object, U extends object>(obj1: T, obj2: U): T & U {
+    return {
+        ...obj1,
+        ...obj2
+    }
+}
+
+//const wrongComboObj = merge({name: "Vedat"}, 9); // Error: Argument of type '9' is not assignable to parameter of type 'object'
+const wrongComboObj = merge({name: "Vedat"}, {num: 9});
+console.log(wrongComboObj);
+
+
+interface Lengthy {
+    length: number;
+}
+
+function printDoubleLength<T extends Lengthy>(item: T): number {
+    return item.length * 2;
+}
+
+
+---------------------------------------
+* Default Type Parameters
+---------------------------------------
+function makeEmptyArray<T = number>(): T[] {
+    return [];
+}
+
+const nums = makeEmptyArray(); // It is number[] by default
+const bools = makeEmptyArray<boolean>(); // It is boolean[]
+
+
+---------------------------------------
+* Writing Generic Classes
+---------------------------------------
+interface Song {
+    title: string;
+    artist: string;
+}
+
+interface Video {
+    title: string;
+    creator: string;
+    resolution: string;
+}
+
+class VideoPlaylist {
+    public videos: Video[] = [];
+}
+
+class SongPlaylist {
+    public songs: Song[] = [];
+}
+
+
+class Playlist<T> {
+    public queue: T[] = [];
+
+    add(el: T) {
+        this.queue.push(el);
+    }
+
+}
+
+const songs = new Playlist<Song>();
+const videos = new Playlist<Video>();
+
+songs.add({
+    title: "Song1",
+    artist: "Artist1"
+});
+
+videos.add({
+    title: "Video1",
+    creator: "Creator1",
+    resolution: "1080p"
+});
+
+console.log(songs.queue);
+console.log(videos.queue);
 
 ########################################################################################################
