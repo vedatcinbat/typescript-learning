@@ -2186,7 +2186,27 @@ getFarmAnimalSound(pig);
 ---------------------------------------
 * Exhaustiveness Checks With Never
 ---------------------------------------
-
+function getFarmAnimalSound(animal: FarmAnimal) {
+    switch (animal.kind) {
+        case 'rooster':
+            console.log("Cockadoooodle doo");
+            break;
+        case 'cow':
+            console.log("Moo");
+            break;
+        case 'pig':
+            console.log("Oink");
+            break;
+        case 'sheep':
+            console.log("Baa");
+            break;
+        + default:
+        +     /* const shouldNeverGetHere: never = animal;
+        +     return shouldNeverGetHere; */
+        +     const _exhaustiveCheck: never = animal;
+        +     return _exhaustiveCheck;
+    }
+}
 
 
     
