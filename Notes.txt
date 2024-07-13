@@ -2375,9 +2375,89 @@ export function userHelper() {
     console.log('User Helper'); 
 }
 
+########################################################################################################
+
+########################################################################################################
+* SECTION 18 : Webpack & TypeScript
+---------------------------------------
+* What's The Point Of Webpack ?
+---------------------------------------
+-> Webpack is a popular open-source JavaScript module bundler. 
+-> It is primarily used to bundle JavaScript files for usage in a browser,
+but it can also transform, bundle, or package just about any resource or asset. 
+-> Webpack is highly configurable and can be extended with plugins and loaders to perform
+various tasks during the build process.
+
+########################################################################################################
+
+########################################################################################################
+* SECTION 19 : React & TypeScript
+---------------------------------------
+* Create React App With TypeScript
+---------------------------------------
+> npx create-react-app my-app --template typescript 
+or
+> yarn create react-app my-app --template typescript
+
+- index.tsx
+const func = <T,>(x: T): T => {
+  return x;
+}
+
+
+function App() {
+    ...
+}
+
+
+---------------------------------------
+* Our First Component
+---------------------------------------
+import React from 'react';
+
+function Greeter(): JSX.Element {
+    return <h1>Hello from Greeter</h1>;
+}
+
+export default Greeter;
+
+---------------------------------------
+* React.FC
+---------------------------------------
+const Greeter: React.FC = () => {
+    return <h1>Hello from Greeter</h1>;
+}
+
+
+---------------------------------------
+* useState With TypeScript
+---------------------------------------
+interfaca Product {
+    title: string;
+    price: number;
+    tax: number;
+}
+
+function App() {
+    const items: Product[] = [
+        {id: 1, product: "Lemon", quantity: 3},
+        {id: 2, product: "Chicken", quantity: 2},
+    ]
+
+    // With useState
+    const [items, setItems] = useState<Product[] | []>(items);
 
 
 
+    //return <div>{ShoppingList items={items} />}</div>
+}
+
+export default App;
+
+
+---------------------------------------
+* Important Parts While Using Typescript with React
+---------------------------------------
 
 
 
