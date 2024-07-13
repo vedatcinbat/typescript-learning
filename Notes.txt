@@ -2267,3 +2267,120 @@ function printUsers(users: User[]) {
     })
 }
 ########################################################################################################
+
+########################################################################################################
+* SECTION 17 : Modules
+---------------------------------------
+* Using TypeScript Modules
+---------------------------------------
+-> Create file "index.ts" and "utils.ts"
+-> You have functions that you want to use in index.ts file like :
+function add(x: number, y: number): number {
+    return x + y;
+}
+
+function sample<T>(arr: T[]): T {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
+}
+
+-> Use "export" before function 
+
+export function add(x: number, y: number): number {
+    return x + y;
+}
+
+export function sample<T>(arr: T[]): T {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
+}
+
+-> Now you can call these function from outside of this "utils.ts" file
+
+index.ts
+import {add, sample} from "./utils"
+console.log(add(1, 2));
+console.log(sample([1, 2, 3, 4, 5]));
+
+
+---------------------------------------
+* Import/Export Syntax In Depth
+---------------------------------------
+utils.ts
+export const pi = 3.14......
+
+index.ts
+import {add, sample, pi} from "./utils.ts"
+
+console.log(pi)
+
+- User.ts
+export default class User {
+    constructor(public username: string, public email: string) {}
+    logout() {
+        console.log(`User ${this.username} has been logged out.`);
+    }
+}
+
+export function userHelper() {
+    console.log('User Helper'); 
+}
+
+- index.ts
+
+import { add, sample, pi } from './utils.js';
+import User, { userHelper } from './User.js';
+//import { userHelper } from './User.js';
+
+
+console.log(add(1, 2));
+console.log(sample([1, 2, 3, 4, 5]));
+
+console.log(pi);
+
+userHelper();
+
+
+import { add, ***sample as randomSample, pi } from './utils.js';
+
+const sapmle = 123;
+
+console.log(randomSample([1, 2, 3, 4, 5]));
+
+
+---------------------------------------
+* Importing Types
+---------------------------------------
+- types.ts
+export interface Person {
+    username: string;
+    email: string;
+}
+
+export type Color = 'red' | 'green' | 'blue';
+
+- User.ts
+import type { Person } from './types.js';
+or
+import { type Person, .....} from ...
+
+export default class User implements Person {
+    constructor(public username: string, public email: string) {}
+    logout() {
+        console.log(`User ${this.username} has been logged out.`);
+    }
+}
+
+export function userHelper() {
+    console.log('User Helper'); 
+}
+
+
+
+
+
+
+
+
+
+########################################################################################################
